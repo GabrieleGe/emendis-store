@@ -1,0 +1,32 @@
+<li class="cart-item">
+  <div class="item-info">
+    <img [src]="item.image" [alt]="item.title" data-testid="item-image"/>
+    <div>
+      <h4 data-testid="item-title">{{ item.title }}</h4>
+      <p>{{ item.price | currency }}</p>
+      <div>
+        <span class="quantity-label">Quantity: </span>
+        @if (!isPreview) {
+        <button mat-button (click)="decreaseQuantity()" data-testid="decrease-button">-</button>
+        }
+        <span class="quantity" data-testid="quantity">{{ item.quantity }}</span>
+        @if (!isPreview) {
+        <button mat-button (click)="increaseQuantity()" data-testid="increase-button">+</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (!isPreview) {
+
+  <button
+    mat-mini-fab
+    aria-label="delete all products"
+    (click)="removeAllItems()"
+    class="custom-small-button"
+    data-testid="remove-button"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+  }
+</li>

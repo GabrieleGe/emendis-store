@@ -1,0 +1,29 @@
+<div class="product-detail-container">
+  @if (product()) {
+  <div class="product-layout">
+    <div class="product-image">
+      <img [src]="product()!.image" [alt]="product()!.title" />
+    </div>
+
+    <div class="product-info">
+      <h1>{{ product()!.title }}</h1>
+      <div class="price">{{ product()!.price | currency }}</div>
+      <div class="category">Category: {{ product()!.category }}</div>
+      <div class="rating">
+        Rating: {{ product()!.rating.rate }} ({{ product()!.rating.count }}
+        reviews)
+      </div>
+      <p class="description">{{ product()!.description }}</p>
+
+      <div class="actions">
+        <button mat-stroked-button (click)="addToCart(product()!)">
+          Add to Cart
+        </button>
+        <button mat-flat-button (click)="goBack()">Back to Products</button>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="loading">Loading product details...</div>
+  }
+</div>

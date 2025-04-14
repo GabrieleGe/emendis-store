@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <h1>Emendis Dashboard</h1>
+  <div class="content">
+    <section class="products-section">
+      <h2>Featured Products</h2>
+      <div class="products-grid">
+        @for (product of productService.products().slice(0, 6); track
+        product.id) {
+        <app-product-card [product]="product" (add)="addToCart($event)">
+        </app-product-card>
+        }
+      </div>
+      <button routerLink="/products" mat-stroked-button>
+        View All Products
+      </button>
+    </section>
+
+    <aside class="cart-preview">
+      <h2>Your Cart</h2>
+      <app-cart [isPreview]="true"></app-cart>
+    </aside>
+  </div>
+</div>

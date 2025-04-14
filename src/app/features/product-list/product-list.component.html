@@ -1,0 +1,20 @@
+<div class="product-list-container">
+  <div class="flex">
+    <h1>All Products</h1>
+    <input
+      class="filter-input"
+      type="text"
+      placeholder="Search products..."
+      (input)="updateSearchTerm($event)"
+    />
+  </div>
+
+  <div class="products-grid">
+    @for (product of filteredProducts(); track product.id) {
+    <app-product-card [product]="product" (add)="addToCart($event)">
+    </app-product-card>
+    } @empty {
+    <p>No products found.</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.product-list-container {
+  padding: 20px;
+  .flex {
+    justify-content: space-between;
+    display: flex;
+    align-items: baseline;
+  }
+  .filter-input {
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid;
+    padding: 0px 8px;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+}

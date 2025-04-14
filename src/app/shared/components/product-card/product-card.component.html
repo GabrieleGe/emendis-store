@@ -1,0 +1,15 @@
+<mat-card appearance="outlined" class="product-card">
+  <mat-card-content class="flex">
+    <div>
+      <img [src]="product.image" class="cart-image" [alt]="product.title" />
+      <h3>{{ product.title }}</h3>
+      <p>{{ product.price | currency }}</p>
+    </div>
+    <div class="actions">
+      <button mat-button [routerLink]="['/products', product.id]">
+        View Details
+      </button>
+      <button mat-stroked-button (click)="addToCart()">Add to Cart</button>
+    </div>
+  </mat-card-content>
+</mat-card>

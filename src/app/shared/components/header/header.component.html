@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+  <span routerLink="/dashboard" class="app-title">Emendis Store</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/products">Products</a>
+  <a mat-button routerLink="/cart" class="cart-link">
+    <mat-icon>shopping_cart</mat-icon>
+    <span
+      *ngIf="cartService.cartCount() > 0"
+      class="cart-badge"
+      [matBadge]="cartService.cartCount()"
+      matBadgeColor="accent"
+    >
+    </span>
+  </a>
+</mat-toolbar>

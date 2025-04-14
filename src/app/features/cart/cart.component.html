@@ -1,0 +1,28 @@
+<div class="cart-container">
+  @if (cartItems.length === 0) {
+  <p class="empty-cart">Your cart is empty.</p>
+  } @else {
+  <ul class="cart-items">
+    @for (item of cartItems; track item.id) {
+    <app-cart-item
+      [item]="item"
+      [isPreview]="isPreview"
+      (remove)="removeAllFromCart($event)"
+      (decreaseQty)="removeOneFromCart($event)"
+      (increaseQty)="addToCart($event)"
+    ></app-cart-item>
+    }
+  </ul>
+
+  <div class="cart-summary">
+    <p class="items-count">Items: {{ totalCount }}</p>
+    <p class="total">Total: {{ totalPrice | currency }}</p>
+    @if (!isPreview) {
+      <button mat-stroked-button class="checkout-button">Checkout</button>
+      <button mat-flat-button (click)="clearCart()">Clear Cart</button>
+    } @if (isPreview) {
+    <a mat-stroked-button href="/cart">Checkout</a>
+    }
+  </div>
+  }
+</div>
