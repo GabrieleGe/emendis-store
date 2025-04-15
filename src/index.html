@@ -22,8 +22,11 @@
           sessionStorage.removeItem("redirect");
           const baseTag = document.querySelector("base");
           const basePath = baseTag ? baseTag.getAttribute("href") : "/";
-          const newPath = basePath + redirect;
-          window.history.replaceState(null, null, newPath);
+          const pathSegments = redirect.split('/');
+          const filteredPath = pathSegments.filter(segment => segment.length > 0);
+          const routePath = filteredPath.join('/');
+          const fullPath = routePath ? `${basePath}${routePath}` : basePath;
+          window.history.replaceState(null, null, fullPath);
         }
       })();
     </script>

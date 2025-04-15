@@ -4,16 +4,13 @@
       <meta charset="utf-8" />
       <title>Redirecting...</title>
       <script>
-        sessionStorage.setItem(
-          "redirect",
-          window.location.pathname.slice(1) || ""
-        );
-        const segmentCount = window.location.pathname.split("/").length;
-        const baseTag = document.createElement("base");
-        let repositoryName = window.location.pathname.split("/")[1];
-        baseTag.href = repositoryName ? `/${repositoryName}/` : "/";
-        document.getElementsByTagName("head")[0].appendChild(baseTag);
-        window.location.href = baseTag.href;
+        const pathSegments = window.location.pathname.split('/');
+        pathSegments.splice(0, 2);
+        const appPath = pathSegments.join('/');
+        sessionStorage.setItem('redirect', appPath);
+        const repoName = window.location.pathname.split('/')[1];
+        const baseHref = repoName ? `/${repoName}/` : '/';
+        window.location.href = baseHref;
       </script>
     </head>
     <body>
