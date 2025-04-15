@@ -9,11 +9,12 @@ import { CartItemComponent } from '../../shared/components/cart-item/cart-item.c
 import { MatButtonModule } from '@angular/material/button';
 import { CartItem } from '../../shared/models/product.model';
 import { Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CurrencyPipe, CartItemComponent, MatButtonModule],
+  imports: [CurrencyPipe, CartItemComponent, MatButtonModule, RouterModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
