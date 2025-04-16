@@ -1,26 +1,37 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, OnDestroy, signal } from '@angular/core';
 import { CartItem, Product } from '../../shared/models/product.model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CartService {
+export class CartService implements OnDestroy {
   private cartItems = signal<CartItem[]>(this.loadCartFromStorage());
   cartCountUniques = computed(() => this.cartItems().length);
-  cartCount = computed(() => this.cartItems().reduce((count, item) => count + item.quantity, 0));
+  cartCount = computed(() =>
+    this.cartItems().reduce((count, item) => count + item.quantity, 0)
+  );
 
-  private cartSubject = new BehaviorSubject<CartItem[]>(this.loadCartFromStorage());
+  private cartSubject = new BehaviorSubject<CartItem[]>(
+    this.loadCartFromStorage()
+  );
   cartItems$ = this.cartSubject.asObservable();
-  
+
+  private storageListener = (event: StorageEvent) => {
+    if (event.key === 'cartItems') {
+      const newItems = JSON.parse(event.newValue || '[]');
+      this.cartItems.set(newItems);
+      this.cartSubject.next(newItems);
+    }
+  };
+
   constructor() {
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'cartItems') {
-        const newItems = JSON.parse(event.newValue || '[]');
-        this.cartItems.set(newItems);
-        this.cartSubject.next(newItems);
-      }
-    });
+    window.addEventListener('storage', this.storageListener);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('storage', this.storageListener);
+    this.cartSubject.complete();
   }
 
   private loadCartFromStorage(): CartItem[] {
@@ -40,65 +51,68 @@ export class CartService {
       console.error('Error saving cart to storage', e);
     }
   }
-  
+
   addToCart(product: Product): void {
-    this.cartItems.update(items => {
-      const existingItemIndex = items.findIndex(item => item.id === product.id);
-      
+    this.cartItems.update((items) => {
+      const existingItemIndex = items.findIndex(
+        (item) => item.id === product.id
+      );
+
       let newItems;
       if (existingItemIndex !== -1) {
         newItems = [...items];
         newItems[existingItemIndex] = {
           ...newItems[existingItemIndex],
-          quantity: newItems[existingItemIndex].quantity + 1
+          quantity: newItems[existingItemIndex].quantity + 1,
         };
       } else {
         newItems = [...items, { ...product, quantity: 1 }];
       }
-      
+
       this.saveCartToStorage(newItems);
       this.cartSubject.next(newItems);
       return newItems;
     });
   }
-  
+
   removeOneFromCart(productId: number): void {
-    this.cartItems.update(items => {
-      const existingItemIndex = items.findIndex(item => item.id === productId);
-      
+    this.cartItems.update((items) => {
+      const existingItemIndex = items.findIndex(
+        (item) => item.id === productId
+      );
+
       if (existingItemIndex === -1) return items;
-      
+
       const newItems = [...items];
-      
+
       if (newItems[existingItemIndex].quantity > 1) {
         newItems[existingItemIndex] = {
           ...newItems[existingItemIndex],
-          quantity: newItems[existingItemIndex].quantity - 1
+          quantity: newItems[existingItemIndex].quantity - 1,
         };
       } else {
         newItems.splice(existingItemIndex, 1);
       }
-      
-      this.saveCartToStorage(newItems);
-      this.cartSubject.next(newItems); 
-      return newItems;
-    });
-  }
-  
-  removeAllFromCart(productId: number): void {
-    this.cartItems.update(items => {
-      const newItems = items.filter(item => item.id !== productId);
+
       this.saveCartToStorage(newItems);
       this.cartSubject.next(newItems);
       return newItems;
     });
   }
-  
+
+  removeAllFromCart(productId: number): void {
+    this.cartItems.update((items) => {
+      const newItems = items.filter((item) => item.id !== productId);
+      this.saveCartToStorage(newItems);
+      this.cartSubject.next(newItems);
+      return newItems;
+    });
+  }
+
   clearCart(): void {
     const emptyCart: CartItem[] = [];
     this.cartItems.set(emptyCart);
     this.saveCartToStorage(emptyCart);
-    this.cartSubject.next(emptyCart); 
+    this.cartSubject.next(emptyCart);
   }
-
 }

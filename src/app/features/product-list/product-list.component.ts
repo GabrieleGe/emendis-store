@@ -3,6 +3,7 @@ import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { Product } from '../../shared/models/product.model';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -35,8 +36,9 @@ export class ProductListComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    //TODO: catch error and display error
-    this.productService.fetchProducts().subscribe();
+    this.productService.fetchProducts().pipe(
+      take(1)
+    ).subscribe();
   }
 
   updateSearchTerm(event: Event): void {

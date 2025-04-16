@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
@@ -18,7 +19,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
   @Input() isPreview = false;
   cartItems: CartItem[] = [];
   totalPrice = 0;
@@ -36,6 +37,12 @@ export class CartComponent implements OnInit {
       );
       this.totalCount = items.reduce((count, item) => count + item.quantity, 0);
     });
+  }
+
+  ngOnDestroy(): void {
+    if(this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   addToCart(productId: number): void {
